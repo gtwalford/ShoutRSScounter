@@ -1,6 +1,8 @@
 package shoutfeeder;
-
 import processing.core.PApplet;
+import processing.core.PImage;
+
+
 //import shoutfeeder.CirclingDot;
 
 
@@ -18,30 +20,72 @@ public class ShoutFeeder extends PApplet {
 	CirclingDot bbcDot;
 	CirclingDot foxDot;
 	
+	LEDconnect ledStrips;
+	
 	float total;
+	float oldTotal;
+	float bbcPercent;
+	float alPercent;
+	float foxPercent;
+    float test = 0;
+    
+    
+    int r1;
+    int g1;
+    int b1;
+    int r2;
+    int g2;
+    int b2;
+    
+ // Output
+    int redPin   = 9;   
+    int greenPin = 10; 
+    int bluePin  = 11;
 
+    int redPin2 = 3;
+    int greenPin2 = 5;
+    int bluePin2 = 6; 
+    
+    PImage img;
+    
+
+    
 	public void setup() {
-		size(500,500);
+		size(displayHeight,displayWidth);
+		background(0);
 		
 		theFeedBBC = new FeederInput(this, inputBBC);
 		theFeedAL = new FeederInput(this, inputAL);
 		theFeedFOX = new FeederInput(this, inputFOX);
 	   
-		bbcDot = new CirclingDot(this, 100);
-		alDot = new CirclingDot(this, 125);
-	    foxDot = new CirclingDot(this, 150);
+		bbcDot = new CirclingDot(this, width/2-100);
+		alDot = new CirclingDot(this, width/2-125);
+	    foxDot = new CirclingDot(this, width/2-150);
+	    
+	    img = loadImage("sounds.png");    
+
+	    ledStrips = new LEDconnect(this);
+
 	
 	}//END SETUP
 
 	public void draw() {
 		
-		background(100);
+		fill(0,10);
+		rect(0,0,width,height);
+		imageMode(CENTER);
+		image(img, width/2, height/2, width/2, height/2+75);
 
+		  
 		theFeedBBC.counting();
 		theFeedAL.counting();
 		theFeedFOX.counting();
 		
 		total = theFeedBBC.inTime + theFeedAL.inTime + theFeedFOX.inTime;
+		if(theFeedBBC.inTime/total > 0)	bbcPercent = (theFeedBBC.inTime/total); else bbcPercent = 0;
+		if(theFeedAL.inTime/total > 0) alPercent = (theFeedAL.inTime/total); else alPercent = 0;
+		if(theFeedFOX.inTime/total > 0) foxPercent = (theFeedFOX.inTime/total); else foxPercent = 0;
+		
         fill(0,130,250);
 		text("BBC Total Count " + theFeedBBC.total, 10, 50);
 		text(" ++ The inTime count " + theFeedBBC.inTime, 10, 75);
@@ -64,9 +108,26 @@ public class ShoutFeeder extends PApplet {
 		text("OVERALL TOTAL -- " + total,10,400);
 
 		
-        bbcDot.draw((theFeedBBC.inTime/total),0,130,250);
-		alDot.draw((theFeedAL.inTime/total),255,230,0);
-        foxDot.draw((theFeedFOX.inTime/total),250,30,0);
- 
+        bbcDot.draw(bbcPercent,0,130,250);
+		alDot.draw(alPercent,255,230,0);
+        foxDot.draw(foxPercent,250,30,0);
+        
+        ledStrips.light(bbcPercent,alPercent,foxPercent);
+
+		
+//        ledStrips.light(test, test, test);
+        
 	}//END DRAW
+	
+	public void keyReleased(){
+
+		  if (key == '1'){ 
+			 test++;
+			 println(" // Test : " +test);
+		  }
+		  if (key == '2'){
+			  test--;
+			  println(" // Test : " +test);
+		  }
+	}
 }

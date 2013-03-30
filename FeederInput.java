@@ -17,7 +17,7 @@ public class FeederInput {
 
 	Date curDate;
 	long timeStamp; 
-	long timeFrame = 30*60*1000;//(2*60)*60*1000;
+	long timeFrame = (6*60)*60*1000;
 	int inTime = 0;
 	int outTime = 0;
 	int totalTime = 0;

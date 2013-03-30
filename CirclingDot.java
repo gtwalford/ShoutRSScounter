@@ -16,7 +16,6 @@ public class CirclingDot {
 	}//END CIRCLINGDOT
 	
 	void draw(float count,int R,int G,int B){
-	
 	  //draw circling dot
 	parent.pushMatrix();
 	parent.translate(parent.width/2, parent.height/2);
